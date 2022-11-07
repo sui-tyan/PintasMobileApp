@@ -23,5 +23,9 @@ class SignupActivity : AppCompatActivity() {
         val userName = findViewById<TextView>(R.id.user_name)
         val userEmail = findViewById<TextView>(R.id.user_email)
         val userPassword = findViewById<TextView>(R.id.user_password)
+
+        login.setOnClickListener {
+            startActivity(loginActivity)
+        }
     }
 }

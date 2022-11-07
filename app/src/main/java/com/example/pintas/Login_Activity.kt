@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
@@ -19,16 +20,17 @@ class Login_Activity : AppCompatActivity() {
 
         auth = Firebase.auth
 
-        val signup = findViewById<TextView>(R.id.sign_up)
-        val signup_view = Intent(this, SignupActivity::class.java)
-        var login_button = findViewById<Button>(R.id.login_button)
-        val home = Intent(this, MainActivity::class.java)
 
-        login_button.setOnClickListener {
-            startActivity(home)
+        var loginButton = findViewById<Button>(R.id.login_button)
+        var signup = findViewById<TextView>(R.id.sign_up)
+        val signupView = Intent(this, SignupActivity::class.java)
+
+        loginButton.setOnClickListener {
+            startActivity(Intent(this, MainActivity::class.java))
+            Toast.makeText(applicationContext,"Logged In",Toast.LENGTH_SHORT).show()
         }
         signup.setOnClickListener{
-            startActivity(signup_view)
+            startActivity(signupView)
         }
 
     }
