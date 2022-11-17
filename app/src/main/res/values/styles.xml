@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Widget.BottomNavigationView"
+        parent="Theme.MaterialComponents">
+
+        <item name="bottomNavigationStyle">
+            @style/Widget.MaterialComponents.BottomNavigationView.Colored
+        </item>
+        <item name="colorPrimary">
+            @color/white
+        </item>
+        <item name="colorOnPrimary">
+            @color/black
+        </item>
+
+    </style>
+
+</resources>
