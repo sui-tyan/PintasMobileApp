@@ -25,7 +25,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:menu="@menu/profile_appbar">
+            app:menu="@menu/home_profile">
 
             <ImageView
                 android:layout_width="60dp"
@@ -108,14 +108,28 @@
 
             <Button
                 android:id="@+id/edit_button"
-                android:layout_width="150dp"
+                android:layout_width="100dp"
                 android:layout_height="40dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginStart="30dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginStart="20dp"
                 android:backgroundTint="#d9d9d9"
                 android:text="Edit"
                 android:textColor="@color/black"
                 app:layout_constraintStart_toEndOf="@+id/user_picture"
+                app:layout_constraintTop_toBottomOf="@+id/user_name" />
+
+            <Button
+                android:id="@+id/follow_button"
+                android:layout_width="100dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="30dp"
+                android:backgroundTint="#d9d9d9"
+                android:text="Follow"
+                android:textColor="@color/black"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/edit_button"
                 app:layout_constraintTop_toBottomOf="@+id/user_name" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -127,7 +141,7 @@
             android:elevation="10dp"
             android:gravity="center"
             android:text="Post"
-            android:textColor="#039BE5"
+            android:textColor="@color/white"
             android:textSize="20sp"
             android:theme="?attr/actionBarTheme" />
 
@@ -142,7 +156,7 @@
             android:textStyle="bold" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/youRecyclerView"
+            android:id="@+id/profileRecycler"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:visibility="gone">

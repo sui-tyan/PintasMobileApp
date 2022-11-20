@@ -1,6 +1,7 @@
 package com.example.pintas.fragment
 
 import android.app.AlertDialog
+import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
@@ -11,8 +12,14 @@ import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.example.pintas.EditUserDetails
 import com.example.pintas.Login_Activity
+import com.example.pintas.PostActivity
 import com.example.pintas.R
+import com.example.pintas.adapter.PostAdapter
+import com.example.pintas.model.Post
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
@@ -48,6 +55,13 @@ class ProfileFragment : Fragment() {
     private lateinit var profileImage: String
     private lateinit var firebaseUser: FirebaseUser
 
+
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var photoAdapter: PostAdapter
+    private lateinit var myPhotoList: MutableList<Post>
+
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -79,12 +93,69 @@ class ProfileFragment : Fragment() {
         (requireActivity() as AppCompatActivity).setSupportActionBar(toolbar)
 
         val edit_btn = inflate.findViewById<Button>(R.id.edit_button)
+        val follow_btn = inflate.findViewById<Button>(R.id.follow_button)
 
-        edit_btn.setOnClickListener {
-            TODO("Not yet implemented")
-        }
+
+        recyclerView = inflate.findViewById(R.id.profileRecycler)
+        recyclerView.setHasFixedSize(true)
+        val lLManager = LinearLayoutManager(context)
+        lLManager.reverseLayout = true
+        lLManager.stackFromEnd = true
+        recyclerView.layoutManager = lLManager
+
+        myPhotoList = ArrayList()
+        photoAdapter = PostAdapter(requireActivity(), myPhotoList as ArrayList<Post>)
+        recyclerView.adapter = photoAdapter
 
         firebaseUser = FirebaseAuth.getInstance().currentUser!!
+
+        val pref = context?.getSharedPreferences("PREFS", Context.MODE_PRIVATE)
+
+        if (pref != null){
+            this.userUID = pref.getString("profileId", "none").toString()
+            this.profileImage = pref.getString("profileImage", "none").toString()
+            this.userName = pref.getString("userName", "none").toString()
+        }
+
+
+
+
+        edit_btn.setOnClickListener {
+            val intent = Intent(context, EditUserDetails::class.java)
+            startActivity(intent)
+        }
+
+
+
+        if (userUID == firebaseUser.uid) {
+            edit_btn.text = "Edit"
+//            message_button.setOnClickListener {
+//                val intent = Intent(activity, MyMessages::class.java)
+//                startActivity(intent)
+//                activity?.overridePendingTransition(
+//                    com.google.firebase.database.R.anim.slide_in_up,
+//                    com.google.firebase.database.R.anim.slide_out_up)
+//            }
+        }else if (userUID != firebaseUser.uid) {
+            edit_btn?.visibility = View.GONE
+            follow_btn?.visibility = View.VISIBLE
+            follow_btn.setOnClickListener {
+                val ref = firestoreDb.collection("Users").document(userUID).collection("Followers").document(firebaseUser.uid)
+
+//                    .addSnapshotListener { snapshot, exception ->
+//                        userName = snapshot?.getString("name").toString()
+//                        profileImage = snapshot?.getString("image").toString()
+//                    }
+
+                Log.i("name", userName)
+                Log.i("image", profileImage)
+                Log.i("uid", userUID)
+
+            }
+        }
+
+
+
 
         userInfo()
 
@@ -93,7 +164,7 @@ class ProfileFragment : Fragment() {
 
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.profile_appbar, menu)
+        inflater.inflate(R.menu.home_profile, menu)
         super.onCreateOptionsMenu(menu, inflater)
     }
 
@@ -102,7 +173,13 @@ class ProfileFragment : Fragment() {
 
         if (id == R.id.post_btn){
             //do action here
-            Toast.makeText(activity, "Intent to Post Activity", Toast.LENGTH_SHORT).show()
+            val intent = Intent(activity, PostActivity::class.java)
+            startActivity(intent)
+            activity?.finish()
+        }
+
+        if (id == R.id.tutorial){
+            Toast.makeText(activity, "Tutorial", Toast.LENGTH_SHORT).show()
         }
 
         //logout
@@ -137,7 +214,7 @@ class ProfileFragment : Fragment() {
     private fun userInfo() {
         //firestore
         Log.e("currentUser:", firebaseUser.uid)
-        val userRef = firestoreDb.collection("Users").document(firebaseUser.uid)
+        val userRef = firestoreDb.collection("Users").document(userUID)
 
         userRef.addSnapshotListener { snapshot, exception ->
             view?.findViewById<TextView>(R.id.user_name)?.text = snapshot?.getString("username")
@@ -164,5 +241,29 @@ class ProfileFragment : Fragment() {
                     putString(ARG_PARAM2, param2)
                 }
             }
+    }
+
+    override fun onStop() {
+        super.onStop()
+
+        val pref = context?.getSharedPreferences("PREFS", Context.MODE_PRIVATE)?.edit()
+        pref?.putString("profileId", firebaseUser.uid)
+        pref?.apply()
+    }
+
+    override fun onPause() {
+        super.onPause()
+
+        val pref = context?.getSharedPreferences("PREFS", Context.MODE_PRIVATE)?.edit()
+        pref?.putString("profileId", firebaseUser.uid)
+        pref?.apply()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+        val pref = context?.getSharedPreferences("PREFS", Context.MODE_PRIVATE)?.edit()
+        pref?.putString("profileId", firebaseUser.uid)
+        pref?.apply()
     }
 }

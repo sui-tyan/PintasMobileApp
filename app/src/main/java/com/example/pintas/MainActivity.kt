@@ -1,11 +1,11 @@
 package com.example.pintas
 
+import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import com.example.pintas.fragment.HomeFragment
-import com.example.pintas.fragment.SearchFragment
 import com.example.pintas.fragment.ProfileFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
@@ -17,7 +17,6 @@ import com.google.firebase.ktx.Firebase
 class MainActivity : AppCompatActivity() {
 
     private val HomeFragment = HomeFragment()
-    private val SearchFragment = SearchFragment()
     private val ProfileFragment = ProfileFragment()
 
     private lateinit var auth: FirebaseAuth
@@ -37,11 +36,17 @@ class MainActivity : AppCompatActivity() {
         bottomNav.setOnNavigationItemSelectedListener {
             when(it.itemId){
                 R.id.home -> replaceFragment(HomeFragment)
-                R.id.search -> replaceFragment(SearchFragment)
+                R.id.search -> gotoSearchAct()
                 R.id.profile -> replaceFragment(ProfileFragment)
             }
             true
         }
+    }
+
+    private fun gotoSearchAct() {
+        val intent = Intent(this, SearchActivity::class.java)
+        startActivity(intent)
+        finish()
     }
 
     override fun onStart() {
