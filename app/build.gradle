@@ -8,7 +8,7 @@ plugins {
 android {
     signingConfigs{
         debug{
-            storeFile file('C:\\Users\\Vedonic\\AndroidStudioProjects\\MobileApp\\pintasKey.jks')
+            storeFile file('C:\\Users\\malla\\AndroidStudioProjects\\Pintas-Keystore\\pintasKey.jks')
             storePassword 'pintas'
             keyAlias 'pintasKey'
             keyPassword 'pintas'
