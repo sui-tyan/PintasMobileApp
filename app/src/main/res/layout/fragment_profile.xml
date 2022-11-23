@@ -137,7 +137,7 @@
             android:layout_height="200dp"
             android:fontFamily="sans-serif-condensed-medium"
             android:gravity="center"
-            android:text="You Have No Post"
+            android:text="You have no post"
             android:textColor="#A1887F"
             android:textStyle="bold" />
 
@@ -145,7 +145,7 @@
             android:id="@+id/youRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="gone">
+            android:visibility="invisible">
 
         </androidx.recyclerview.widget.RecyclerView>
     </LinearLayout>
