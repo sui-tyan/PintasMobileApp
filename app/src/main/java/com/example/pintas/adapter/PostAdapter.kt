@@ -16,6 +16,7 @@ import androidx.annotation.NonNull
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.example.pintas.CommentsActivity
 import com.example.pintas.EditPostActivity
 import com.example.pintas.R
 import com.example.pintas.model.User
@@ -108,19 +109,13 @@ class PostAdapter (private val mContext: Context,
             }
         }
 
-//        holder.commentButton.setOnClickListener {
-//            val intent = Intent(mContext, CommentsActivity::class.java)
-//            intent.putExtra("postId", post.postid)
-//            intent.putExtra("authorId", post.publisher)
-//            mContext.startActivity(intent)
-//
-//        }
-//        holder.comments.setOnClickListener {
-//            val intent = Intent(mContext, CommentsActivity::class.java)
-//            intent.putExtra("postId", post.postid)
-//            intent.putExtra("authorId", post.publisher)
-//            mContext.startActivity(intent)
-//        }
+        holder.commentButton.setOnClickListener {
+            val intent = Intent(mContext, CommentsActivity::class.java)
+            intent.putExtra("postId", post.postid)
+            intent.putExtra("authorId", post.publisher)
+            mContext.startActivity(intent)
+
+        }
 
 
         //edit feature

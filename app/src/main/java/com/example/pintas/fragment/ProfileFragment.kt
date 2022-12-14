@@ -1,5 +1,6 @@
 package com.example.pintas.fragment
 
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.Context
 import android.content.DialogInterface
@@ -55,10 +56,12 @@ class ProfileFragment : Fragment() {
     private lateinit var profileImage: String
     private lateinit var firebaseUser: FirebaseUser
 
+    private lateinit var noPost: TextView
+
 
     private lateinit var recyclerView: RecyclerView
-    private lateinit var photoAdapter: PostAdapter
-    private lateinit var myPhotoList: MutableList<Post>
+    private lateinit var postAdapter: PostAdapter
+    private lateinit var postList: MutableList<Post>
 
 
 
@@ -92,6 +95,8 @@ class ProfileFragment : Fragment() {
         toolbar.title = ""
         (requireActivity() as AppCompatActivity).setSupportActionBar(toolbar)
 
+        noPost = inflate.findViewById(R.id.noPost)
+
         val edit_btn = inflate.findViewById<Button>(R.id.edit_button)
         val follow_btn = inflate.findViewById<Button>(R.id.follow_button)
 
@@ -103,9 +108,9 @@ class ProfileFragment : Fragment() {
         lLManager.stackFromEnd = true
         recyclerView.layoutManager = lLManager
 
-        myPhotoList = ArrayList()
-        photoAdapter = PostAdapter(requireActivity(), myPhotoList as ArrayList<Post>)
-        recyclerView.adapter = photoAdapter
+        postList = ArrayList()
+        postAdapter = PostAdapter(requireActivity(), postList as ArrayList<Post>)
+        recyclerView.adapter = postAdapter
 
         firebaseUser = FirebaseAuth.getInstance().currentUser!!
 
@@ -154,12 +159,25 @@ class ProfileFragment : Fragment() {
             }
         }
 
-
-
-
         userInfo()
+        retrievePosts()
 
         return inflate
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private fun retrievePosts() {
+        val postRef = FirebaseFirestore.getInstance().collection("Posts")
+
+        postRef.whereEqualTo("publisher", userUID).get().addOnSuccessListener{
+            val list = it!!.toObjects(Post::class.java)
+
+            noPost.visibility = View.GONE
+            recyclerView.visibility = View.VISIBLE
+            postList.clear()
+            postList.addAll(list)
+            postAdapter.notifyDataSetChanged()
+        }
     }
 
 
@@ -191,9 +209,9 @@ class ProfileFragment : Fragment() {
                 .setPositiveButton("OK", null)
                 .show()
 
-            val currentID = FirebaseAuth.getInstance().uid
-            firestoreDb.collection("profile").document(currentID.toString()).collection("presence")
-                .document(currentID.toString()).update("Presence", "Offline")
+//            val currentID = FirebaseAuth.getInstance().uid
+//            firestoreDb.collection("Users").document(currentID.toString()).collection("presence")
+//                .document(currentID.toString()).update("Presence", "Offline")
 
             dialog.getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener {
                 // Logout the user
